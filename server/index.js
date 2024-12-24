@@ -6,6 +6,7 @@ const port = process.env.PORT
 import userRouter from "./src/routes/user.routes.js"
 import connectdb from "./src/db/index.js"
 import cookieParser from "cookie-parser"
+import productRouter from "./src/routes/product.routes.js"
 
 
 app.use(urlencoded({ extended: false }))
@@ -13,6 +14,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use('/user', userRouter)
+app.use('/api/v1', productRouter)
 app.get('/', (req, res) => {
     res.send("Ecommerce")
 })

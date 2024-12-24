@@ -2,7 +2,11 @@
 import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
-    name: {
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users"
+    },
+    productName: {
         type: String,
         required: true,
         trim: true
@@ -29,4 +33,4 @@ const productSchema = new mongoose.Schema({
 
 }, { timestamps: true })
 
-export default mongoose.model('products', productSchema)
+export default mongoose.model('product', productSchema)
