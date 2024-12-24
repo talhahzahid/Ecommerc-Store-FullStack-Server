@@ -8,7 +8,6 @@ import fs from "fs";
 dotenv.config()
 
 const uploadImageToCloudinary = async (localpath) => {
-    // console.log("Uploading image from path:", localpath);
     cloudinary.config({
         cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
         api_key: process.env.CLOUDINARY_API_KEY,
@@ -19,7 +18,6 @@ const uploadImageToCloudinary = async (localpath) => {
         const uploadResult = await cloudinary.uploader.upload(localpath, {
             resource_type: "auto",
         });
-        console.log("Cloudinary upload result:", uploadResult);
         await fs.promises.unlink(localpath);
         return uploadResult.url;
     } catch (error) {
@@ -38,6 +36,7 @@ const postAds = async (req, res) => {
     if (!price) return res.status(400).json({ message: "price is required to post ads" })
     if (!category) return res.status(400).json({ message: "category is required to post ads" })
     if (!req.file) return res.status(400).json({ message: "product image is required" })
+
     try {
         const productImgUrl = await uploadImageToCloudinary(req.file.path)
         if (!productImgUrl) return res.status(400).json({ message: "product image is required" })
@@ -45,7 +44,7 @@ const postAds = async (req, res) => {
 
         const productPost = await product.create({ userId, productName, description, price, category, productImgUrl })
         console.log(productPost);
-        
+
         res.status(201).json({ message: "Product posted successfully", product: productPost });
 
     } catch (error) {
@@ -53,4 +52,16 @@ const postAds = async (req, res) => {
     }
 }
 
-export { postAds }
+
+const allAds = async (req, res) => {
+    try {
+        const allProduct =  await product.find({})
+        res.status(200).json({ message: "All Product", allProduct })
+    } catch (error) {
+        res.status(400).json({ message: "error occurred" })
+    }
+}
+
+
+
+export { postAds, allAds }
